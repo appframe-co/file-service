@@ -3,7 +3,6 @@ import {TFileModel} from '@/types/types'
 
 const ObjectId = Schema.ObjectId;
 
-
 const FileSchema: Schema = new Schema({
   userId: {
     type: ObjectId,

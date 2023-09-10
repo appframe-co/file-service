@@ -11,7 +11,7 @@ const client = new S3Client({
     }
 });
 
-export default async function UploadFile(url: string): Promise<TUploadFile> {
+export default async function UploadFileS3(url: string): Promise<TUploadFile> {
     try {
         if (!url) {
             throw new Error('URL is empty');

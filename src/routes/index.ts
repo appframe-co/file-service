@@ -1,12 +1,10 @@
 import { RoutesInput } from '@/types/types'
 import stagedUploadsCreate from './staged-uploads-create.route'
-import uploadFile from './upload-file.route'
-import getFile from './get-file.route'
-import getFiles from './get-files.route'
+import getFilesByIds from './get-files-by-ids.route'
+import files from './files.route'
 
 export default ({ app }: RoutesInput) => {
+    app.use('/api/files', files);
     app.use('/api/staged_uploads_create', stagedUploadsCreate);
-    app.use('/api/upload_file', uploadFile);
-    app.use('/api/get_file', getFile);
-    app.use('/api/files', getFiles);
+    app.use('/api/get_files_by_ids', getFilesByIds);
 };

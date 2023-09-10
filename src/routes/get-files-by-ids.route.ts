@@ -1,15 +1,17 @@
 import express, { Request, Response, NextFunction } from 'express';
 
-import FileController from '@/controllers/file/file.controller'
+import FilesByIdsController from '@/controllers/file/files-by-ids.controller'
 
 const router = express.Router();
 
-router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { projectId } = req.query as {projectId: string};
+        const { fileIds } = req.body as {fileIds: string[]};
 
-        const data = await FileController({
-            projectId
+        const data = await FilesByIdsController({
+            projectId,
+            fileIds
         });
 
         res.json(data);

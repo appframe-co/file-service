@@ -71,3 +71,9 @@ export type TUploadFile = {
   height: number;
   size: number;
 }
+
+export type TParameters = {
+  limit?: number;
+  sinceId?: string;
+  code?: string;
+}

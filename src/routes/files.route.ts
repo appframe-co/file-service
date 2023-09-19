@@ -3,6 +3,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import FilesController from '@/controllers/file/files.controller'
 import CreateFileController from '@/controllers/file/create-file.controller'
 import DeleteFileController from '@/controllers/file/delete-file.controller'
+import TotalFileController from '@/controllers/file/total-files.controller'
 
 import { TErrorResponse, TFile } from '@/types/types';
 
@@ -20,6 +21,27 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
         const { projectId } = req.query as {projectId: string};
 
         const data = await FilesController({
+            projectId
+        });
+
+        res.json(data);
+    } catch (e) {
+        let message = String(e);
+
+        if (e instanceof Error) {
+            message = e.message; 
+        }
+
+        res.json({error: 'server_error', description: message});
+    }
+});
+
+router.get('/total', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { userId, projectId } = req.query as {userId: string, projectId: string};
+
+        const data = await TotalFileController({
+            userId,
             projectId
         });
 

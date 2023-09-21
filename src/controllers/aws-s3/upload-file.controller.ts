@@ -1,6 +1,6 @@
 import { TUploadFile } from "@/types/types";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-
+import {fromBuffer} from 'file-type';
 import Jimp from 'jimp';
 
 const client = new S3Client({
@@ -37,8 +37,7 @@ export default async function UploadFileS3(url: string): Promise<TUploadFile> {
             throw new Error(`File size max ${filesizeMB}MB`);
         }
 
-        const { fileTypeFromBuffer } = await (eval('import("file-type")') as Promise<typeof import('file-type')>);
-        const mimeInfo = await fileTypeFromBuffer(fileBuf);
+        const mimeInfo = await fromBuffer(fileBuf);
         if (!mimeInfo) {
             throw new Error(`File format`);
         }

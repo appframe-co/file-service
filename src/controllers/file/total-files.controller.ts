@@ -22,7 +22,9 @@ export default async function TotalFiles(fileInput: TFilesInput, parameters: TPa
             { $group: { _id: null, total: { $sum: "$size" } } }
         ]);
 
-        return {total: data[0].total};
+        const total = !data[0] ? 0 : data[0].total;
+
+        return {total};
     } catch (error) {
         throw error;
     }

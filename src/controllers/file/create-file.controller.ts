@@ -33,7 +33,8 @@ export default async function DeleteFileController({userId, projectId, files}: {
                 size: savedImage.size,
                 mimeType: savedImage.mimeType,
                 contentType: savedImage.contentType,
-                src: process.env.AWS_S3_URL_WEBSITE + '/' + savedImage.awsS3Key
+                src: process.env.AWS_S3_URL_WEBSITE + '/' + savedImage.awsS3Key,
+                alt: savedImage.alt
             });
         }
 

@@ -61,6 +61,7 @@ export type TFile = {
   mimeType: string;
   contentType: string;
   src: string;
+  alt: string;
 }
 
 export type TUploadFile = {

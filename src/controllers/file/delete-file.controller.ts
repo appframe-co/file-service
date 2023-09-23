@@ -26,7 +26,8 @@ export default async function DeleteFileController({userId, projectId, id}: {use
             size: file.size,
             mimeType: file.mimeType,
             contentType: file.contentType,
-            src: process.env.AWS_S3_URL_WEBSITE + '/' + file.awsS3Key
+            src: process.env.AWS_S3_URL_WEBSITE + '/' + file.awsS3Key,
+            alt: file.alt
         }
 
         return {file: output};

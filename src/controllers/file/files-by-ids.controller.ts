@@ -25,7 +25,8 @@ export default async function FileController({projectId, fileIds}: {projectId: s
             size: f.size,
             mimeType: f.mimeType,
             contentType: f.contentType,
-            src: process.env.AWS_S3_URL_WEBSITE + '/' + f.awsS3Key
+            src: process.env.AWS_S3_URL_WEBSITE + '/' + f.awsS3Key,
+            alt: f.alt
         }));
 
         return {files: output};

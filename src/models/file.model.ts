@@ -12,7 +12,10 @@ const FileSchema: Schema = new Schema({
     type: ObjectId,
     require: true
   },
-  alt: String,
+  alt: {
+    type: String,
+    default: ''
+  },
   createdAt: {
     type: Date,
     required: true,

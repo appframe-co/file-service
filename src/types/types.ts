@@ -30,6 +30,7 @@ export type TFileModel = {
   mimeType: string;
   uuidFilename: string;
   awsS3Key: string;
+  storage: string;
 }
 
 export enum Resource {

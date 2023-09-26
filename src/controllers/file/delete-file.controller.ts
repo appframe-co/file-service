@@ -17,6 +17,11 @@ export default async function DeleteFileController({userId, projectId, id}: {use
 
         await DeleteFileS3(file.awsS3Key);
 
+        let src = '';
+        if (file.storage === 'aws') {
+            src += process.env.URL_STORAGE_AWS + '/' + file.awsS3Key;
+        }
+
         const output: TFile = {
             id: file.id,
             filename: file.filename,
@@ -26,7 +31,7 @@ export default async function DeleteFileController({userId, projectId, id}: {use
             size: file.size,
             mimeType: file.mimeType,
             contentType: file.contentType,
-            src: process.env.AWS_S3_URL_WEBSITE + '/' + file.awsS3Key,
+            src,
             alt: file.alt
         }
 

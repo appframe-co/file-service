@@ -10,18 +10,25 @@ export default async function FilesController({projectId}: {projectId: string}):
             throw new Error('invalid files');
         }
 
-        const output: TFile[] = files.map(f  => ({
-            id: f.id,
-            filename: f.filename,
-            uuidName: f.uuidName,
-            width: f.width,
-            height: f.height,
-            size: f.size,
-            mimeType: f.mimeType,
-            contentType: f.contentType,
-            src: process.env.AWS_S3_URL_WEBSITE + '/' + f.awsS3Key,
-            alt: f.alt
-        }));
+        const output: TFile[] = files.map(f  => {
+            let src = '';
+            if (f.storage === 'aws') {
+                src += process.env.URL_STORAGE_AWS + '/' + f.awsS3Key;
+            }
+
+            return {
+                id: f.id,
+                filename: f.filename,
+                uuidName: f.uuidName,
+                width: f.width,
+                height: f.height,
+                size: f.size,
+                mimeType: f.mimeType,
+                contentType: f.contentType,
+                src,
+                alt: f.alt
+            };
+        });
 
         return {files: output};
     } catch (error) {

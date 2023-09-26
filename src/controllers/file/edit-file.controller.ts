@@ -100,6 +100,11 @@ export default async function UpdateFile(fileInput: {userId:string, projectId:st
                 if (isErrorFile(file)) {
                     output.file = null;
                 } else {
+                    let src = '';
+                    if (file.storage === 'aws') {
+                        src += process.env.URL_STORAGE_AWS + '/' + file.awsS3Key;
+                    }
+
                     output.file = {
                         id: file.id,
                         filename: file.filename,
@@ -109,7 +114,7 @@ export default async function UpdateFile(fileInput: {userId:string, projectId:st
                         size: file.size,
                         mimeType: file.mimeType,
                         contentType: file.contentType,
-                        src: process.env.AWS_S3_URL_WEBSITE + '/' + file.awsS3Key,
+                        src,
                         alt: file.alt,
                     }
                 }

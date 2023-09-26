@@ -51,7 +51,11 @@ const FileSchema: Schema = new Schema({
     default: 0
   },
   contentType: String,
-  mimeType: String
+  mimeType: String,
+  storage: {
+    type: String,
+    default: 'appframe'
+  }
 });
 
 FileSchema.set('toObject', { virtuals: true });

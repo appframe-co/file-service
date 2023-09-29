@@ -5,8 +5,9 @@ import CreateFileController from '@/controllers/file/create-file.controller'
 import EditFileController from '@/controllers/file/edit-file.controller'
 import DeleteFileController from '@/controllers/file/delete-file.controller'
 import TotalFileController from '@/controllers/file/total-files.controller'
+import CountFilesController from '@/controllers/file/count-files.controller'
 
-import { TErrorResponse, TFile } from '@/types/types';
+import { TErrorResponse, TFile, TParameters } from '@/types/types';
 
 const router = express.Router();
 
@@ -17,11 +18,50 @@ function isErrorDeletedFile(data: TErrorResponse|{file: TFile}): data is TErrorR
     return (data as TErrorResponse).error !== undefined;
 }
 
+type TQueryGet = {
+    userId: string;
+    projectId: string;
+    structureId: string;
+    limit: string;
+    page: string;
+    sinceId: string;
+}
+
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { projectId } = req.query as {projectId: string};
+        const { userId, projectId, limit, page } = req.query as TQueryGet;
+
+        const parameters: TParameters = {};
+        if (limit) {
+            parameters.limit = +limit;
+        }
+        if (page) {
+            parameters.page = +page;
+        }
 
         const data = await FilesController({
+            userId,
+            projectId
+        }, parameters);
+
+        res.json(data);
+    } catch (e) {
+        let message = String(e);
+
+        if (e instanceof Error) {
+            message = e.message; 
+        }
+
+        res.json({error: 'server_error', description: message});
+    }
+});
+
+router.get('/count', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { userId, projectId } = req.query as {userId: string, projectId: string};
+
+        const data = await CountFilesController({
+            userId,
             projectId
         });
 

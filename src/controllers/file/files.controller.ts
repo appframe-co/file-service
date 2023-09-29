@@ -1,11 +1,24 @@
 import File from '@/models/file.model';
-import {TErrorResponse, TFile, TFileModel} from '@/types/types';
+import {TErrorResponse, TFile, TFileModel, TParameters} from '@/types/types';
 
-export default async function FilesController({projectId}: {projectId: string}): 
-    Promise<TErrorResponse | {files: TFile[]}>
-    {
+export default async function Files({userId, projectId}: {userId: string, projectId: string}, parameters: TParameters = {}): Promise<TErrorResponse | {files: TFile[]}> {
     try {
-        const files: TFileModel[] = await File.find({projectId});
+        if (!userId || !projectId) {
+            throw new Error('userId & projectId query required');
+        }
+
+        const defaultLimit = 10;
+
+        const filter: any = {userId, projectId};
+        let {limit=defaultLimit, page=1} = parameters;
+
+        if (limit > 250) {
+            limit = defaultLimit;
+        }
+
+        const skip = (page - 1) * limit;
+
+        const files: TFileModel[] = await File.find(filter).skip(skip).limit(limit);
         if (!files) {
             throw new Error('invalid files');
         }

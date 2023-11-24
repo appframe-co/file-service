@@ -32,7 +32,8 @@ export default async function FileController({projectId, fileIds}: {projectId: s
                 mimeType: f.mimeType,
                 contentType: f.contentType,
                 src,
-                alt: f.alt
+                alt: f.alt,
+                caption: f.caption
             };
         });
 

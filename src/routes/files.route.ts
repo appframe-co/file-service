@@ -125,7 +125,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
 
 router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let {userId, projectId, id, alt}: {userId:string, projectId:string, id:string, alt:string} = req.body;
+        let {userId, projectId, id, alt, caption}: {userId:string, projectId:string, id:string, alt:string, caption:string} = req.body;
 
         if (req.params.id !== id) {
             throw new Error('id invalid');
@@ -134,7 +134,7 @@ router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
         const data = await EditFileController({
             userId, projectId,
             id,
-            alt
+            alt, caption
         });
 
         res.json(data);

@@ -16,6 +16,10 @@ const FileSchema: Schema = new Schema({
     type: String,
     default: ''
   },
+  caption: {
+    type: String,
+    default: ''
+  },
   createdAt: {
     type: Date,
     required: true,

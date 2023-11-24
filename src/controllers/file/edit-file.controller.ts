@@ -6,9 +6,9 @@ function isErrorFile(data: null|TFileModel): data is null {
     return (data as null) === null;
 }
 
-export default async function UpdateFile(fileInput: {userId:string, projectId:string, id:string, alt:string}): Promise<{file: TFile|null, userErrors: any}> {
+export default async function UpdateFile(fileInput: {userId:string, projectId:string, id:string, alt:string, caption:string}): Promise<{file: TFile|null, userErrors: any}> {
     try {
-        const {userId, projectId, id, alt} = fileInput;
+        const {userId, projectId, id, alt, caption} = fileInput;
 
         if (!id) {
             throw new Error('id required');
@@ -28,13 +28,17 @@ export default async function UpdateFile(fileInput: {userId:string, projectId:st
                 output.file = await (async function() {
                     const file: any = {};
 
-                    const valueData = data['alt'];
-
-                    const [errorsValue, valueValue] = validateString(valueData, {max: 350});
-                    if (errorsValue.length > 0) {
-                        errors.push({field: ['alt'], message: errorsValue[0]}); 
+                    const [errorsAlt, valueAlt] = validateString(data['alt'], {max: 350});
+                    if (errorsAlt.length > 0) {
+                        errors.push({field: ['alt'], message: errorsAlt[0]}); 
                     }
-                    file['alt'] = valueValue;
+                    file['alt'] = valueAlt;
+ 
+                    const [errorsCaption, valueCaption] = validateString(data['caption'], {max: 350});
+                    if (errorsCaption.length > 0) {
+                        errors.push({field: ['caption'], message: errorsCaption[0]}); 
+                    }
+                    file['caption'] = valueCaption;
 
                     return file;
                 }());
@@ -48,7 +52,7 @@ export default async function UpdateFile(fileInput: {userId:string, projectId:st
 
                 return {errors: [{message}]};
             }
-        })({alt});
+        })({alt, caption});
         if (Object.keys(errorsForm).length > 0) {
             return {
                 file: null,
@@ -116,6 +120,7 @@ export default async function UpdateFile(fileInput: {userId:string, projectId:st
                         contentType: file.contentType,
                         src,
                         alt: file.alt,
+                        caption: file.caption,
                     }
                 }
 

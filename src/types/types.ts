@@ -15,6 +15,7 @@ export type TFileModel = {
   userId: string;
   projectId: string;
   alt: string;
+  caption: string;
   createdAt: Date;
   updatedAt: Date;
   createdBy: string;
@@ -63,6 +64,7 @@ export type TFile = {
   contentType: string;
   src: string;
   alt: string;
+  caption: string;
 }
 
 export type TUploadFile = {

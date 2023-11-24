@@ -42,7 +42,8 @@ export default async function CreateFileController({userId, projectId, files}: {
                 mimeType: savedImage.mimeType,
                 contentType: savedImage.contentType,
                 src,
-                alt: savedImage.alt
+                alt: savedImage.alt,
+                caption: savedImage.caption
             });
         }
 

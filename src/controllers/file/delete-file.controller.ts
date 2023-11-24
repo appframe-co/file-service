@@ -32,7 +32,8 @@ export default async function DeleteFileController({userId, projectId, id}: {use
             mimeType: file.mimeType,
             contentType: file.contentType,
             src,
-            alt: file.alt
+            alt: file.alt,
+            caption: file.caption
         }
 
         return {file: output};

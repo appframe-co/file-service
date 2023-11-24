@@ -39,7 +39,8 @@ export default async function Files({userId, projectId}: {userId: string, projec
                 mimeType: f.mimeType,
                 contentType: f.contentType,
                 src,
-                alt: f.alt
+                alt: f.alt,
+                caption: f.caption
             };
         });
 

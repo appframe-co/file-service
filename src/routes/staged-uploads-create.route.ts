@@ -38,7 +38,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
                 }
             };
 
-            const Key = `projects/${projectId}/files/${file.resource}/${uuidv4()}/${getFilename(file.filename)}`;
+            const Key = `tmp/${uuidv4()}/${getFilename(file.filename)}`;
 
             const { url, fields } = await createPresignedPost(client, {
                 Bucket,
@@ -55,7 +55,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
 
             const parameters = Object.keys(fields).map(f => ({name: f, value: fields[f]}));
             parameters.push({name: 'Content-Type', value: file.mimeType});
-            stagedTargets.push({parameters, url, resourceUrl: url+Key});
+            stagedTargets.push({parameters, url, resourceUrl: url+'/'+Key});
         }
 
         res.json({stagedTargets});

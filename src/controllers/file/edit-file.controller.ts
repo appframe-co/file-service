@@ -1,14 +1,17 @@
 import File from '@/models/file.model';
 import { TFile, TFileModel } from '@/types/types';
 import { validateString } from '@/utils/validators/string.validator';
+import { validateNumber } from '@/utils/validators/number.validator';
 
 function isErrorFile(data: null|TFileModel): data is null {
     return (data as null) === null;
 }
 
-export default async function UpdateFile(fileInput: {userId:string, projectId:string, id:string, alt:string, caption:string}): Promise<{file: TFile|null, userErrors: any}> {
+export default async function EditFileController(
+    fileInput: {userId:string, projectId:string, id:string, alt:string, caption:string, state:string, width:number, height:number}): 
+    Promise<{file: TFile|null, userErrors: any}> {
     try {
-        const {userId, projectId, id, alt, caption} = fileInput;
+        const {userId, projectId, id, alt, caption, state, width, height} = fileInput;
 
         if (!id) {
             throw new Error('id required');
@@ -28,17 +31,61 @@ export default async function UpdateFile(fileInput: {userId:string, projectId:st
                 output.file = await (async function() {
                     const file: any = {};
 
-                    const [errorsAlt, valueAlt] = validateString(data['alt'], {max: 350});
-                    if (errorsAlt.length > 0) {
-                        errors.push({field: ['alt'], message: errorsAlt[0]}); 
+                    if (data.hasOwnProperty('alt')) {
+                        const {alt} = data;
+                        if (alt !== undefined && alt !== null) {
+                            const [errorsAlt, valueAlt] = validateString(data['alt'], {max: 350});
+                            if (errorsAlt.length > 0) {
+                                errors.push({field: ['alt'], message: errorsAlt[0]}); 
+                            }
+                            file['alt'] = valueAlt;
+                        }
                     }
-                    file['alt'] = valueAlt;
  
-                    const [errorsCaption, valueCaption] = validateString(data['caption'], {max: 350});
-                    if (errorsCaption.length > 0) {
-                        errors.push({field: ['caption'], message: errorsCaption[0]}); 
+                    if (data.hasOwnProperty('caption')) {
+                        const {caption} = data;
+                        if (caption !== undefined && caption !== null) {
+                            const [errorsCaption, valueCaption] = validateString(data['caption'], {max: 350});
+                            if (errorsCaption.length > 0) {
+                                errors.push({field: ['caption'], message: errorsCaption[0]}); 
+                            }
+                            file['caption'] = valueCaption;
+                        }
                     }
-                    file['caption'] = valueCaption;
+
+                    if (data.hasOwnProperty('state')) {
+                        const {state} = data;
+                        if (state !== undefined && state !== null) {
+                            const [errorsState, valueState] = validateString(data['state'], {
+                                enumList: ['pending', 'fulfilled', 'rejected']
+                            });
+                            if (errorsState.length > 0) {
+                                errors.push({field: ['state'], message: errorsState[0]}); 
+                            }
+                            file['state'] = valueState;
+                        }
+                    }
+
+                    if (data.hasOwnProperty('width')) {
+                        const {width} = data;
+                        if (width !== undefined && width !== null) {
+                            const [errorsWidth, valueWidth] = validateNumber(data['width']);
+                            if (errorsWidth.length > 0) {
+                                errors.push({field: ['width'], message: errorsWidth[0]}); 
+                            }
+                            file['width'] = valueWidth;
+                        }
+                    }
+                    if (data.hasOwnProperty('height')) {
+                        const {height} = data;
+                        if (height !== undefined && height !== null) {
+                            const [errorHeight, valueHeight] = validateNumber(data['height']);
+                            if (errorHeight.length > 0) {
+                                errors.push({field: ['height'], message: errorHeight[0]}); 
+                            }
+                            file['height'] = valueHeight;
+                        }
+                    }
 
                     return file;
                 }());
@@ -52,7 +99,7 @@ export default async function UpdateFile(fileInput: {userId:string, projectId:st
 
                 return {errors: [{message}]};
             }
-        })({alt, caption});
+        })({alt, caption, state, width, height});
         if (Object.keys(errorsForm).length > 0) {
             return {
                 file: null,
@@ -104,10 +151,10 @@ export default async function UpdateFile(fileInput: {userId:string, projectId:st
                 if (isErrorFile(file)) {
                     output.file = null;
                 } else {
-                    let src = '';
-                    if (file.storage === 'aws') {
-                        src += process.env.URL_STORAGE_AWS + '/' + file.awsS3Key;
-                    }
+                    let src = `${process.env.URL_STORAGE}/upload/p/${projectId}/f/${file.filename}.${file.ext}`;
+                    // if (file.storage === 'aws') {
+                    //     src = process.env.URL_STORAGE_AWS + '/' + file.awsS3Key;
+                    // }
 
                     output.file = {
                         id: file.id,
@@ -121,6 +168,8 @@ export default async function UpdateFile(fileInput: {userId:string, projectId:st
                         src,
                         alt: file.alt,
                         caption: file.caption,
+                        state: file.state,
+                        ext: file.ext
                     }
                 }
 

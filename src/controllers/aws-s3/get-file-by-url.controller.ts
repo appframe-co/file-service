@@ -1,7 +1,7 @@
-import { TUploadFile } from "@/types/types";
+import { TDataFile } from "@/types/types";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import {fromBuffer} from 'file-type';
-import Jimp from 'jimp';
+import sizeOf from 'image-size';
 
 const client = new S3Client({
     region: process.env.AWS_S3_REGION,
@@ -11,7 +11,7 @@ const client = new S3Client({
     }
 });
 
-export default async function UploadFileS3(url: string): Promise<TUploadFile> {
+export default async function getDataFileByUrl(url: string): Promise<TDataFile> {
     try {
         if (!url) {
             throw new Error('URL is empty');
@@ -19,7 +19,7 @@ export default async function UploadFileS3(url: string): Promise<TUploadFile> {
 
         const {AWS_S3_BUCKET: s3Bucket, AWS_S3_URL: s3Url} = process.env;
 
-        const key = url.split(s3Url + '/')[1];
+        const key = url.split(s3Url+'/')[1];
         const command = new GetObjectCommand({Bucket: s3Bucket, Key: key});
         const response = await client.send(command);
 
@@ -42,20 +42,20 @@ export default async function UploadFileS3(url: string): Promise<TUploadFile> {
             throw new Error(`File format`);
         }
 
-        const parts = key.split('/');
-        const uuidName = parts[parts.length-2];
-
         const filetypes = /jpeg|jpg|png|gif/;
         const isMediaTypeImage = filetypes.test(mimeInfo.mime);
         if (!isMediaTypeImage) {
-            throw new Error('Error  media type image');
+            throw new Error('Error media type image');
         }
 
-        const image = await Jimp.read(Buffer.from(fileBuf));
-        const width = image.getWidth();
-        const height = image.getHeight();
+        const {width=0, height=0} = sizeOf(fileBuf);
+
+        const arUrl = url.split('/');
+        const filename = arUrl[arUrl.length-1];
+        const uuidName = arUrl[arUrl.length-2];
 
         return {
+            filename,
             uuidName,
             ext: mimeInfo.ext,
             mimeType: mimeInfo.mime,

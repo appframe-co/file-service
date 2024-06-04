@@ -17,10 +17,10 @@ export default async function FileController({projectId, fileIds}: {projectId: s
         }
 
         const output: TFile[] = files.map(f  => {
-            let src = '';
-            if (f.storage === 'aws') {
-                src += process.env.URL_STORAGE_AWS + '/' + f.awsS3Key;
-            }
+            let src = `${process.env.URL_STORAGE}/upload/p/${projectId}/f/${f.filename}.${f.ext}`;
+            // if (f.storage === 'aws') {
+            //     src = process.env.URL_STORAGE_AWS + '/' + f.awsS3Key;
+            // }
 
             return {
                 id: f.id,
@@ -33,7 +33,9 @@ export default async function FileController({projectId, fileIds}: {projectId: s
                 contentType: f.contentType,
                 src,
                 alt: f.alt,
-                caption: f.caption
+                caption: f.caption,
+                state: f.state,
+                ext: f.ext
             };
         });
 

@@ -17,10 +17,10 @@ export default async function DeleteFileController({userId, projectId, id}: {use
 
         await DeleteFileS3(file.awsS3Key);
 
-        let src = '';
-        if (file.storage === 'aws') {
-            src += process.env.URL_STORAGE_AWS + '/' + file.awsS3Key;
-        }
+        let src = `${process.env.URL_STORAGE}/upload/p/${projectId}/f/${file.filename}.${file.ext}`;
+        // if (file.storage === 'aws') {
+        //     src = process.env.URL_STORAGE_AWS + '/' + file.awsS3Key;
+        // }
 
         const output: TFile = {
             id: file.id,
@@ -33,7 +33,9 @@ export default async function DeleteFileController({userId, projectId, id}: {use
             contentType: file.contentType,
             src,
             alt: file.alt,
-            caption: file.caption
+            caption: file.caption,
+            state: file.state,
+            ext: file.ext
         }
 
         return {file: output};

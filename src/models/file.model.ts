@@ -59,6 +59,10 @@ const FileSchema: Schema = new Schema({
   storage: {
     type: String,
     default: 'appframe'
+  },
+  state: {
+    type: String,
+    default: 'pending'
   }
 });
 

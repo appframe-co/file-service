@@ -32,6 +32,7 @@ export type TFileModel = {
   uuidFilename: string;
   awsS3Key: string;
   storage: string;
+  state: string;
 }
 
 export enum Resource {
@@ -65,9 +66,21 @@ export type TFile = {
   src: string;
   alt: string;
   caption: string;
+  state: string;
+  ext: string;
 }
 
 export type TUploadFile = {
+  uuidName: string;
+  ext: string;
+  mimeType: string;
+  width: number;
+  height: number;
+  size: number;
+}
+
+export type TDataFile = {
+  filename: string;
   uuidName: string;
   ext: string;
   mimeType: string;
@@ -81,4 +94,10 @@ export type TParameters = {
   page?: number;
   sinceId?: string;
   code?: string;
+  filename?: string;
+}
+
+export type TInputFile = {
+  originalSource: string,
+  contentType: string
 }

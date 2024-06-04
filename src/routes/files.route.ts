@@ -25,11 +25,12 @@ type TQueryGet = {
     limit: string;
     page: string;
     sinceId: string;
+    filename: string;
 }
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { userId, projectId, limit, page } = req.query as TQueryGet;
+        const { userId, projectId, limit, page, filename } = req.query as TQueryGet;
 
         const parameters: TParameters = {};
         if (limit) {
@@ -37,6 +38,10 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
         }
         if (page) {
             parameters.page = +page;
+        }
+        
+        if (filename) {
+            parameters.filename = filename;
         }
 
         const data = await FilesController({
@@ -125,7 +130,8 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
 
 router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let {userId, projectId, id, alt, caption}: {userId:string, projectId:string, id:string, alt:string, caption:string} = req.body;
+        let {userId, projectId, id, alt, caption, state, width, height}: 
+        {userId:string, projectId:string, id:string, alt:string, caption:string, state:string, width:number, height:number} = req.body;
 
         if (req.params.id !== id) {
             throw new Error('id invalid');
@@ -134,7 +140,7 @@ router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
         const data = await EditFileController({
             userId, projectId,
             id,
-            alt, caption
+            alt, caption, state, width, height
         });
 
         res.json(data);

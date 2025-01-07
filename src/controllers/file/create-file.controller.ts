@@ -9,11 +9,12 @@ export default async function CreateFileController({userId, projectId, files}: {
     try {
         const output: TFile[] = [];
 
-        const storage: string = 'appframe';
+        const storage: string = 'timeweb-s3';
 
         const newFiles = [];
         for (const file of files) {
             const fileData = await getDataFileByUrl(file.originalSource);
+            if (!fileData) continue;
 
             // validate filename and set unique it in project
             const filename = await validateFilename(fileData.filename, fileData.uuidName, {projectId});
@@ -22,7 +23,7 @@ export default async function CreateFileController({userId, projectId, files}: {
                 ...fileData,
                 filename,
                 storage,
-                state: 'pending',
+                state: 'fulfilled',
                 contentType: file.contentType,
                 userId, projectId,
                 createdBy: userId,
@@ -32,12 +33,6 @@ export default async function CreateFileController({userId, projectId, files}: {
 
         const savedFiles: TFileModel[] = await File.create(newFiles);
         for (const file of savedFiles) {
-            let src = `${process.env.URL_STORAGE}/upload/p/${projectId}/f/${file.filename}.${file.ext}`;
-
-            // if (storage === 'aws') {
-            //     src = process.env.URL_STORAGE_AWS + '/' + savedImage.awsS3Key;
-            // }
-
             output.push({
                 id: file.id,
                 filename: file.filename,
@@ -47,7 +42,7 @@ export default async function CreateFileController({userId, projectId, files}: {
                 size: file.size,
                 mimeType: file.mimeType,
                 contentType: file.contentType,
-                src,
+                src: process.env.URL_STORAGE + '/' + file.src,
                 alt: file.alt,
                 caption: file.caption,
                 state: file.state,

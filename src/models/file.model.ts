@@ -72,8 +72,11 @@ FileSchema.set('toJSON', { virtuals: true });
 FileSchema.virtual('uuidFilename').get(function() {
   return this.uuidName + '.' + this.ext;
 });
-FileSchema.virtual('awsS3Key').get(function() {
-  return `projects/${this.projectId}/files/${this.contentType}/${this.uuidName}/${this.filename}`;
+FileSchema.virtual('S3Key').get(function() {
+  return `p/${this.projectId}/f/${this.uuidName}/${this.filename}.${this.ext}`;
+});
+FileSchema.virtual('src').get(function() {
+  return `upload/p/${this.projectId}/f/${this.filename}.${this.ext}`;
 });
 
 export default mongoose.models.File || mongoose.model < TFileModel & Document > ("File", FileSchema);

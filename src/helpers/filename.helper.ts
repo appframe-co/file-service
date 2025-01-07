@@ -12,7 +12,7 @@ export default async function validateFilename(filename:string, uuidName:string,
         filename = filename.trim();
 
         const arFilename = filename.split('.');
-        arFilename.pop(); // remove ext
+        arFilename.pop();
         filename = arFilename.join('.');
 
         filename = slugify(filename, {replacement: '_', remove: /[<>{}/\\|?`*+~()'"!:@,]/g});

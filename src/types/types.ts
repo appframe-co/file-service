@@ -30,7 +30,8 @@ export type TFileModel = {
   contentType: string;
   mimeType: string;
   uuidFilename: string;
-  awsS3Key: string;
+  S3Key: string;
+  src: string;
   storage: string;
   state: string;
 }

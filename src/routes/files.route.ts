@@ -8,6 +8,7 @@ import TotalFileController from '@/controllers/file/total-files.controller'
 import CountFilesController from '@/controllers/file/count-files.controller'
 
 import { TErrorResponse, TFile, TParameters } from '@/types/types';
+import FileController from '@/controllers/file/file.controller';
 
 const router = express.Router();
 
@@ -141,6 +142,28 @@ router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
             userId, projectId,
             id,
             alt, caption, state, width, height
+        });
+
+        res.json(data);
+    } catch (e) {
+        let message = String(e);
+
+        if (e instanceof Error) {
+            message = e.message; 
+        }
+
+        res.json({error: 'server_error', description: message});
+    }
+});
+
+router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { projectId } = req.query as {projectId: string};
+        const {id} = req.params;
+
+        const data = await FileController({
+            projectId,
+            id
         });
 
         res.json(data);

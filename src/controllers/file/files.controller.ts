@@ -31,11 +31,6 @@ export default async function Files({userId, projectId}: {userId: string, projec
         }
 
         const output: TFile[] = files.map(f  => {
-            let src = `${process.env.URL_STORAGE}/upload/p/${projectId}/f/${f.filename}.${f.ext}`;
-            // if (f.storage === 'aws') {
-            //     src = process.env.URL_STORAGE_AWS + '/' + f.awsS3Key;
-            // }
-
             return {
                 id: f.id,
                 filename: f.filename,
@@ -45,11 +40,12 @@ export default async function Files({userId, projectId}: {userId: string, projec
                 size: f.size,
                 mimeType: f.mimeType,
                 contentType: f.contentType,
-                src,
+                src: process.env.URL_STORAGE + '/' + f.src,
                 alt: f.alt,
                 caption: f.caption,
                 state: f.state,
-                ext: f.ext
+                ext: f.ext,
+                S3Key: f.S3Key
             };
         });
 

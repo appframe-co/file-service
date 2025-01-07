@@ -151,11 +151,6 @@ export default async function EditFileController(
                 if (isErrorFile(file)) {
                     output.file = null;
                 } else {
-                    let src = `${process.env.URL_STORAGE}/upload/p/${projectId}/f/${file.filename}.${file.ext}`;
-                    // if (file.storage === 'aws') {
-                    //     src = process.env.URL_STORAGE_AWS + '/' + file.awsS3Key;
-                    // }
-
                     output.file = {
                         id: file.id,
                         filename: file.filename,
@@ -165,7 +160,7 @@ export default async function EditFileController(
                         size: file.size,
                         mimeType: file.mimeType,
                         contentType: file.contentType,
-                        src,
+                        src: process.env.URL_STORAGE + '/' + file.src,
                         alt: file.alt,
                         caption: file.caption,
                         state: file.state,

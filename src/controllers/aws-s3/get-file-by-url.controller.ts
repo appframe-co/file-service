@@ -4,21 +4,21 @@ import {fromBuffer} from 'file-type';
 import sizeOf from 'image-size';
 
 const client = new S3Client({
-    region: process.env.AWS_S3_REGION,
+    region: process.env.S3_REGION,
+    endpoint: process.env.S3_ENDPOINT, 
     credentials: {
-        accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID as string,
-        secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY as string
+        accessKeyId: process.env.S3_ACCESS_KEY_ID as string,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY as string
     }
 });
 
-export default async function getDataFileByUrl(url: string): Promise<TDataFile> {
+export default async function getDataFileByUrl(url: string): Promise<TDataFile|null> {
     try {
         if (!url) {
             throw new Error('URL is empty');
         }
 
-        const {AWS_S3_BUCKET: s3Bucket, AWS_S3_URL: s3Url} = process.env;
-
+        const {S3_BUCKET: s3Bucket, S3_URL: s3Url} = process.env;
         const key = url.split(s3Url+'/')[1];
         const command = new GetObjectCommand({Bucket: s3Bucket, Key: key});
         const response = await client.send(command);
@@ -64,6 +64,6 @@ export default async function getDataFileByUrl(url: string): Promise<TDataFile> 
             size: fileLength
         };
     } catch (error) {
-        throw error;
+        return null;
     }
 }

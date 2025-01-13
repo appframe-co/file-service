@@ -54,10 +54,13 @@ export default async function getDataFileByUrl(url: string): Promise<TDataFile|n
         const filename = arUrl[arUrl.length-1];
         const uuidName = arUrl[arUrl.length-2];
 
+        const arFilename = filename.split('.');
+        const ext = arFilename.pop() ?? mimeInfo.ext;
+
         return {
             filename,
             uuidName,
-            ext: mimeInfo.mime.split('/')[1],
+            ext,
             mimeType: mimeInfo.mime,
             width,
             height,

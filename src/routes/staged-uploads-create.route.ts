@@ -69,7 +69,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
                 },
                 Conditions: [
                     ["starts-with", "$Content-Type", "image/"],
-                    ["content-length-range", 0, 1000000],
+                    ["content-length-range", 0, 10485760],
                 ],
                 Expires: 30,
             });

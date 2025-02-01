@@ -9,3 +9,6 @@
 
 # typescript
 *.tsbuildinfo
+
+# misc
+.DS_Store
